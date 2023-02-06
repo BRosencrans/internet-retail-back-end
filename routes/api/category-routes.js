@@ -59,7 +59,24 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+  //update a catagories name by its `id` value
+  Category.update(req.body, {
+    where: {
+        id: req.params.id
+    }
+  })
+    .then(updateCats => {
+        if (!updateCats[0]) {
+            res.status(404).json({ message: "This id does not exist"});
+            return;
+        }
+        res.json(updateCats);
+  })
+    .catch(err => {
+        console.log(err); 
+        res.status(500).json(err);
+  });
+
 });
 
 router.delete('/:id', (req, res) => {
