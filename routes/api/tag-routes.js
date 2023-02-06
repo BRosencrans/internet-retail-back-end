@@ -76,11 +76,26 @@ router.put('/:id', (req, res) => {
         console.log(err); 
         res.status(500).json(err);
   });
-
 });
 
 router.delete('/:id', (req, res) => {
-  // delete on tag by its `id` value
+  //deletes a tag by its `id` value
+  Tag.destroy({
+    where: {
+        id: req.params.id
+    }
+  })
+    .then(deleteTag => {
+        if (!deleteTag) {
+            res.status(404).json({ message: "This id does not exist"});
+            return;
+        }
+        res.json(deleteTag);
+  })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+  });
 });
 
 module.exports = router;
