@@ -22,7 +22,28 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   // find a single tag by its `id`
-  // be sure to include its associated Product data
+  Tag.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+        model: Product,
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id'],
+      }
+    ]
+  })
+    .then(tagIds => {
+      if (!tagIds) {
+        res.status(404).json({ message: "This id does not exist"});
+        return;
+      }
+      res.json(tagIds);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.post('/', (req, res) => {

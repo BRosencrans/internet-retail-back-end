@@ -22,7 +22,28 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   // find one category by its `id` value
-  // be sure to include its associated Products
+  Category.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+        model: Product,
+        attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+      }
+    ]
+  })
+    .then(catIds => {
+      if (!catIds) {
+        res.status(404).json({ message: "This id does not exist"}); 
+        return; 
+      }
+      res.json(catIds);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.post('/', (req, res) => {
